@@ -2,19 +2,17 @@
 // Created by lklake on 2019/7/21.
 //
 
-#ifndef TREE_STR_H
-#define TREE_STR_H
+#ifndef DHT_STR_H
+#define DHT_STR_H
 
 
-#define DEFAULT_LEN 5
 typedef struct _string string;
 
-void enlarge(string* this);
+void l_enlarge(string* this);
 
 void string_init(string* this,char* data,int length);
 void string_append(string* this,char chr);
 void string_nappend(string* this,string* that,int n);
-
 void string_extend(string* this,string* that);
 
 
@@ -36,4 +34,4 @@ struct _string{
     void (*print)(string* this);
 };
 
-#endif //TREE_STR_H
+#endif //DHT_STR_H

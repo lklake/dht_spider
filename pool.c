@@ -2,13 +2,14 @@
 // Created by lklake on 2019/7/7.
 //
 
-#include "pool.h"
-#include "queue.h"
 #include <pthread.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+
+#include "pool.h"
+#include "queue.h"
 
 
 //工作函数

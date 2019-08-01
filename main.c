@@ -1,15 +1,20 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
+
 #include <dnet.h>
 #include <errno.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 #include "pool.h"
 #include "str.h"
 #include "tree.h"
 #include "hashtable.h"
 #include "bencode.h"
+#include "g_macros.h"
+
 #define MY_PORT 6554
 #define MY_IP "192.168.8.100"
 #define MAXBUF 1024
+
 
 void socket_init(int* socket_fd){
     struct sockaddr_in my_addr, their_addr;
@@ -26,7 +31,6 @@ void socket_init(int* socket_fd){
     }
 
 
-    /*设置socket属性，端口可以重用*/
     int opt=SO_REUSEADDR;
     setsockopt(*socket_fd,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
 
@@ -46,29 +50,23 @@ void socket_init(int* socket_fd){
     }
 }
 
-void socket_recv(int socket_fd){
-    char recvbuf[MAXBUF];
-    char sendbuf[MAXBUF];
+void socket_send(int socket_fd,string* send_data,struct sockaddr_in* client_addr,socklen_t client_len){
+    int ret;
+    ret = sendto(socket_fd, send_data->data, send_data->length, 0, (struct sockaddr *)&client_addr, client_len);
+    if(ret<0)
+        printf("消息发送失败！错误代码是%d，错误信息是'%s'\n", errno, strerror(errno));
+}
+
+void socket_recv(int socket_fd,string* recv_data,struct sockaddr_in* client_addr,socklen_t * client_len){
+    char recv_buf[MAXBUF];
     int  ret;
-    struct sockaddr_in client_addr;
-    socklen_t cli_len=sizeof(client_addr);
+    bzero(recv_buf, MAXBUF);
 
-    /* 开始处理每个新连接上的数据收发 */
-    bzero(recvbuf, MAXBUF);
-    bzero(sendbuf, MAXBUF);
-    strcpy(sendbuf,"123456789");
+    ret = recvfrom(socket_fd, recv_buf, MAXBUF, 0, (struct sockaddr *)client_addr, client_len);
 
-    /* 接收客户端的消息 */
-    ret = recvfrom(socket_fd, recvbuf, MAXBUF, 0, (struct sockaddr *)&client_addr, &cli_len);
     if (ret > 0){
-        printf("socket %d recv from : %s : %d message: %s ，%d bytes\n",
-               socket_fd, inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), recvbuf, ret);
-
-        ret = sendto(socket_fd, sendbuf, strlen(sendbuf), 0, (struct sockaddr *)&client_addr, cli_len);
-        if(ret<0)
-            printf("消息发送失败！错误代码是%d，错误信息是'%s'\n", errno, strerror(errno));
-
-
+        recv_data=malloc(sizeof(string));
+        string_init(recv_data,recv_buf,ret);
     }
     else
     {
@@ -77,13 +75,31 @@ void socket_recv(int socket_fd){
     }
 }
 
-void udp_net(){
+void dht_net(pool* my_pool,tree* my_tree){
     int socket_fd=0;
+    struct sockaddr_in client_addr;
+    socklen_t client_len=0;
     socket_init(&socket_fd);
     while(1){
-        socket_recv(socket_fd);
+        string* recv_data;
+        socket_recv(socket_fd,recv_data,&client_addr,&client_len);
+        dict* tmp_dict=bdecode(recv_data);
+//        deal;
+//        string* send_data;
+
+//        socket_send(socket_fd,send_data,&client_addr,client_len);
     }
+    close(socket_fd);
 }
+
+
+
+
+
 int main_main(){
-    udp_net();
+    pool my_pool;
+    pool_init(&my_pool,POOL_SIZE);
+    tree my_tree;
+    tree_init(&my_tree);
+    dht_net(&my_pool,&my_tree);
 }

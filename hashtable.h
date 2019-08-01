@@ -2,15 +2,16 @@
 // Created by lklake on 2019/7/29.
 //
 
-#ifndef TREE_HASHTABLE_H
-#define TREE_HASHTABLE_H
-
-#define NAME_SIZE 10
+#ifndef DHT_HASHTABLE_H
+#define DHT_HASHTABLE_H
 
 #include<string.h>
 #include <malloc.h>
+#include "g_macros.h"
+
+
 typedef struct _item{
-    char key[NAME_SIZE];
+    char key[HASH_TABLE_KEY_SIZE];
     void* value;
     int flag;
     int loop;
@@ -36,4 +37,4 @@ void hash_table_remove(dict* this,char* key);
 
 void hash_table_destroy(dict* this);
 void hash_table_show(dict* this);
-#endif //TREE_HASHTABLE_H
+#endif //DHT_HASHTABLE_H

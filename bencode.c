@@ -2,12 +2,14 @@
 // Created by lklake on 2019/7/30.
 //
 
-#include "bencode.h"
 #include <ctype.h>
-#include "str.h"
 #include<stdio.h>
 #include <malloc.h>
 #include <string.h>
+
+#include "str.h"
+#include "bencode.h"
+
 
 void* decode(string* raw,int* index){
     if(raw->i(raw,*index)=='d') {//字典

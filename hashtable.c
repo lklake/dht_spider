@@ -4,6 +4,8 @@
 
 #include "hashtable.h"
 #include "str.h"
+
+
 int hash_func(const char* name){
     return name[0];
 }

@@ -3,8 +3,10 @@
 //
 
 #include <malloc.h>
-#include "str.h"
 #include<string.h>
+
+#include "str.h"
+
 
 void string_init(string* this,char* data,int length){
     this->i=&string_i;
@@ -44,7 +46,7 @@ void string_extend(string* this, string* that){
         return;
     }
     while(this->max<this->length+that->length)
-        enlarge(this);
+        l_enlarge(this);
     memcpy(this->data+this->length,that->data,that->length);
     this->length+=that->length;
 }
@@ -58,7 +60,7 @@ void string_nappend(string* this, string* that,int n){
     }
     n=that->length<n?that->length:n;
     while(this->max<this->length+n)
-        enlarge(this);
+        l_enlarge(this);
     memcpy(this->data+this->length,that->data,n);
     this->length+=n;
 }
@@ -66,7 +68,7 @@ void string_nappend(string* this, string* that,int n){
 
 void string_append(string* this,char chr){
     if(this->max-this->length<1)
-        enlarge(this);
+        l_enlarge(this);
     *(this->data+this->length)=chr;
     this->length++;
 }

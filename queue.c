@@ -2,8 +2,11 @@
 // Created by lklake on 2019/7/5.
 //
 
-#include "queue.h"
 #include <malloc.h>
+
+#include "queue.h"
+
+
 void queue_init(queue* this){
     this->destroy=&queue_destroy;
     this->enqueue=&queue_enqueue;

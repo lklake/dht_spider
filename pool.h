@@ -2,13 +2,16 @@
 // Created by lklake on 2019/7/7.
 //
 
-#ifndef TREE_POOL_H
-#define TREE_POOL_H
+#ifndef DHT_POOL_H
+#define DHT_POOL_H
+
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+
 #include "queue.h"
+
 
 typedef struct _pool{
     pthread_mutex_t lock;
@@ -33,4 +36,4 @@ void pool_start(pool* );
 void pool_distroy(pool* pool_instance);
 void add_task(pool*,void* data,void (*)(void*));
 
-#endif //TREE_POOL_H
+#endif //DHT_POOL_H

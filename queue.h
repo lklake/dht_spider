@@ -2,10 +2,11 @@
 // Created by lklake on 2019/7/5.
 //
 
-#ifndef TREE_QUEUE_H
-#define TREE_QUEUE_H
+#ifndef DHT_QUEUE_H
+#define DHT_QUEUE_H
 
 #include <pthread.h>
+
 
 typedef struct _queue_node{
     struct _queue_node* next;
@@ -32,4 +33,4 @@ void queue_dequeue(queue* this);
 void* queue_top(queue* this);
 void queue_destroy(queue* this);
 int queue_isempty(queue* this);
-#endif //TREE_QUEUE_H
+#endif //DHT_QUEUE_H

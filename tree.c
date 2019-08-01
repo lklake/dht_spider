@@ -1,13 +1,16 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "tree.h"
 #include "queue.h"
 
+
 extern char mask[8];
 
-void l_remove_old(Node* list[8],char* in){
+void l_remove_old(Node* list[8],unsigned char* in){
     long in_time=list[0]->in_time;
     int index=0;
     for(int i=1;i<8;i++){
@@ -29,8 +32,8 @@ void l_split(treeNode* treenode) {
     treenode->lchild->mask = mask[treenode->lchild->layer % 8];
     treenode->rchild->mask = mask[treenode->rchild->layer % 8];
     for (int i = 0; i < treenode->llen; i++) {
-        int tmp = treenode->nodes0[i]->signature[treenode->lchild->layer % 8];
-        if ((tmp & treenode->lchild->mask) == tmp) {
+        unsigned char tmp = treenode->nodes0[i]->signature[treenode->lchild->layer % 8];
+        if (( tmp & treenode->lchild->mask) == tmp) {
             treenode->lchild->nodes0[treenode->lchild->llen] = treenode->nodes0[i];
             treenode->lchild->llen++;
         } else {
@@ -39,7 +42,7 @@ void l_split(treeNode* treenode) {
         }
     }
     for (int i = 0; i < treenode->rlen; i++) {
-        int tmp = treenode->nodes1[i]->signature[treenode->rchild->layer % 8];
+        unsigned char tmp = treenode->nodes1[i]->signature[treenode->rchild->layer % 8];
         if ((tmp & treenode->rchild->mask) == tmp) {
             treenode->rchild->nodes0[treenode->rchild->llen] = treenode->nodes1[i];
             treenode->rchild->llen++;
@@ -67,7 +70,7 @@ int l_exist(Node* newNode,Node* nodeList[],int len){
     return flag;
 }
 
-void tree_add_node(Tree* this,Node* newNode){
+void tree_add_node(tree* this,Node* newNode){
     treeNode* tmp=this->head;
     while(tmp->hasChild){
         int layer=tmp->layer;
@@ -127,7 +130,7 @@ void tree_add_node(Tree* this,Node* newNode){
 
 
 
-void tree_add_char(Tree* this,char* a){
+void tree_add_char(tree* this,unsigned char* a){
     Node* newNode=(Node*)malloc(sizeof(Node));
     memcpy(newNode->signature,a,20);
     memcpy(newNode->addr,a+20,6);
@@ -191,7 +194,7 @@ void tree_add_char(Tree* this,char* a){
 }
 
 
-void tree_init(Tree* my_tree){
+void tree_init(tree* my_tree){
     my_tree->head=(treeNode*)malloc(sizeof(treeNode));
     my_tree->head->hasChild=0;
     my_tree->head->lchild=NULL;
@@ -209,7 +212,7 @@ void tree_init(Tree* my_tree){
     my_tree->rebuilt=&tree_rebuilt;
 }
 
-char* tree_get_bucket(Tree* this,const char* a){//a为21位字符串
+char* tree_get_bucket(tree* this,const unsigned char* a){//a为21位字符串
     char* data;
     treeNode* iterator=this->head;
     while(iterator->hasChild){
@@ -238,7 +241,7 @@ char* tree_get_bucket(Tree* this,const char* a){//a为21位字符串
     return data;
 }
 
-void tree_save(Tree* this){
+void tree_save(tree* this){
     FILE *fp;
     fp=fopen("tree.dat","wb");
     treeNode* iterator=this->head;
@@ -265,7 +268,7 @@ void tree_save(Tree* this){
     fclose(fp);
 }
 
-void tree_destroy(Tree* this){
+void tree_destroy(tree* this){
     treeNode* iterator=this->head;
     queue* tree_node_queue=(queue*)malloc(sizeof(queue));
     tree_node_queue->enqueue(tree_node_queue,iterator);
@@ -297,7 +300,7 @@ void tree_destroy(Tree* this){
     tree_node_queue->destroy(tree_node_queue);
 }
 
-void tree_rebuilt(Tree* this){
+void tree_rebuilt(tree* this){
     FILE *fp;
     fp=fopen("tree.dat","rb");
     Node* tmp=(Node*)malloc(sizeof(Node));
